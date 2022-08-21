@@ -11,7 +11,7 @@ export function HeroCard({ icon, hp, gem = 0 }: HeroCardProps) {
   return (
     <Card
       icon={icon}
-      value={`${hpString}${gem ? ` ♦${gem}` : ''}`}
+      value={`${hpString}${gem ? `♦${gem}` : ''}`}
       bottomValue={hpString}
       color='grey'
     />

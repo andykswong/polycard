@@ -1,5 +1,7 @@
 import { Action, ActionType } from './actions';
 import { Cards, getTooltip, Heroes } from '../model/card';
+import { MIN_CARDS_PER_PILE, CARD_PILES } from '../model/game';
+import { slotId, SlotId, SlotType } from '../model/slot';
 
 export enum GameState {
   Lobby,
@@ -11,10 +13,7 @@ export interface GameStates {
   hero: number;
   heroGems: number;
   heroHp: number;
-  weapons: [number, number];
-  weaponValues: [number, number];
-  item: number;
-  piles: CardPile[];
+  slots: Record<SlotId, CardPile>;
 }
 
 export interface AppStates extends GameStates {
@@ -24,19 +23,16 @@ export interface AppStates extends GameStates {
 }
 
 export interface CardPile {
-  cards: number;
   topCard: number;
   topCardValue?: number;
+  cards?: number;
 }
 
 const initialGameState: () => GameStates = () => ({
   hero: Heroes[0],
   heroGems: 0,
   heroHp: 0,
-  weapons: [0, 0],
-  weaponValues: [0, 0],
-  item: 0,
-  piles: [],
+  slots: {},
 });
 
 export const INITIAL_STATE: AppStates = {
@@ -46,6 +42,7 @@ export const INITIAL_STATE: AppStates = {
     [0x0]: 0,
     [0x0001]: 1,
     [0x0002]: 1,
+    [0x0003]: 1,
   },
   ...initialGameState(),
 };
@@ -65,37 +62,69 @@ export function reducer(state: AppStates, action: Action) {
       };
 
     case ActionType.START_GAME:
-      if (state.state === GameState.Lobby) {
-        return {
-          ...state,
-          ...initialGameState(),
-          state: GameState.Playing,
-          hero: state.hero,
-          heroHp: Cards[state.hero].value,
-          piles: generatePiles(),
-        };
-      }
-      break;
+      const newState = {
+        ...state,
+        ...initialGameState(),
+        state: GameState.Playing,
+        hero: action.hero,
+        heroHp: Cards[action.hero].value,
+      };
+      newState.slots = createPiles(newState.slots, action.topCards);
+      return newState;
+
+    case ActionType.UPDATE_HERO:
+      return {
+        ...state,
+        heroHp: action.hp,
+        heroGems: action.gems,
+      };
+
+    case ActionType.PLACE_CARD:
+      return {
+        ...state,
+        slots: updateSlot(state.slots, action.slotId, {
+          topCard: action.card,
+        }),
+      };
+
+    case ActionType.UPDATE_CARD:
+      return {
+        ...state,
+        slots: updateSlot(state.slots, action.slotId, {
+          ...state.slots[action.slotId],
+          topCardValue: action.value,
+        }),
+      };
+
+    case ActionType.FLIP_CARD: {
+      const cards = state.slots[action.slotId]?.cards || 0;
+      return {
+        ...state,
+        slots: updateSlot(state.slots, action.slotId, {
+          cards: Math.max(0, cards - 1),
+          topCard: cards ? action.card : 0,
+        }),
+      };
+    }
+
   }
 
   return state;
 };
 
-function generatePiles(): CardPile[] {
-  const piles: CardPile[] = [];
-  for (let i = 0; i < 5; ++i) {
-    piles.push({
-      cards: 6,
-      topCard: 0,
-    });
+function createPiles(slots: Record<SlotId, CardPile>, cards: number[]): Record<SlotId, CardPile> {
+  for (let i = 0; i < CARD_PILES; ++i) {
+    slots[slotId(SlotType.Pile, i)] = {
+      cards: MIN_CARDS_PER_PILE + i,
+      topCard: cards[i],
+    };
   }
+  return slots;
+}
 
-  piles[0].topCard = 0x3003;
-  piles[1].topCard = 0x1005;
-  piles[1].topCardValue = 5;
-  piles[2].topCard = 0x1002;
-  piles[3].topCard = 0x4002;
-  piles[4].topCard = 0x2004;
-
-  return piles;
+function updateSlot(slots: Record<SlotId, CardPile>, slotId: number, slot: CardPile): Record<SlotId, CardPile> {
+  return {
+    ...slots,
+    [slotId]: slot
+  };
 }

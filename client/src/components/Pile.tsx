@@ -8,7 +8,8 @@ export type PileProps = {
 export function Pile({ children, placeholder }: PileProps) {
   return (
     <div className={styles.pile}>
-      {(!children || !children.length) && placeholder}
+      {placeholder &&
+        <div className={`${styles.placeholder} ${children && children.length ? styles.hasCard : ''}`}>{placeholder}</div>}
       {children && children.map((card, i) => (
         <div className={styles.card} key={i}>
           {card}

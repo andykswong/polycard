@@ -6,14 +6,14 @@ import {
   Route,
   useNavigate,
 } from 'react-router-dom';
-import { AppStateProvider, useDispatch } from './state/State';
+import { AppStateProvider, useAppState, useDispatch } from './state/State';
 import { Button } from './components/Button';
 import { HeroSelector } from './containers/HeroSelector';
 import { Tooltip } from './containers/Tooltip';
 import { Game } from './Game';
 
 import styles from './App.module.css';
-import { startGameAction } from './state/actions';
+import { startGame } from './state/interact';
 
 export function App() {
   return (
@@ -50,18 +50,19 @@ export const Title = () => (
 const Space = () => <div className={styles.spacer} />;
 
 const Menu = () => {
+  const { hero } = useAppState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   return (
     <React.Fragment>
       <div className={styles.row}>
-        <p>Select a hero card to play:</p>
+        <h3>Select a hero card to play:</h3>
       </div>
       <HeroSelector />
       <Tooltip />
-      <Button wide onClick={() => {
-        dispatch(startGameAction());
+      <Button wide onClick={async () => {
+        await startGame(dispatch, hero);
         navigate('play');
       }}>
         Play

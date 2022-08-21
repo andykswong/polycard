@@ -41,3 +41,7 @@
 .topAligned {
   align-items: flex-start;
 }
+
+.piles {
+  min-height: 260px;
+}

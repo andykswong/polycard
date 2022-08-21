@@ -26,10 +26,10 @@ export const CardSuit: Readonly<Record<CardType, string | null>> = {
 };
 
 export const CardColor: Readonly<Record<CardType, string | null>> = {
-  [CardType.Foe]: 'blue',
+  [CardType.Foe]: 'black',
   [CardType.Treasure]: 'gold',
   [CardType.Food]: 'red',
-  [CardType.Weapon]: 'black',
+  [CardType.Weapon]: 'blue',
   [CardType.Hero]: 'grey',
   [CardType.Special]: 'grey',
 };
@@ -79,23 +79,23 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x1002]: {
     name: 'pharaoh',
     type: CardType.Foe,
-    value: 12,
+    value: 10,
     description: 'The Mighty Pharaoh',
   },
   [0x1004]: {
     name: 'mummy',
     type: CardType.Foe,
-    value: 9,
+    value: 7,
   },
   [0x1005]: {
     name: 'cobra',
     type: CardType.Foe,
-    value: 7,
+    value: 5,
   },
   [0x1006]: {
     name: 'ibis',
     type: CardType.Foe,
-    value: 5,
+    value: 3,
     description: 'An ibis',
   },
   [0x1007]: {
@@ -104,31 +104,56 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
     value: 3,
   },
   [0x1008]: {
-    name: 'bettle',
+    name: 'beetle',
     type: CardType.Foe,
     value: 1,
+  },
+  [0x1009]: {
+    name: 'bird',
+    type: CardType.Foe,
+    value: 2,
+  },
+  [0x100A]: {
+    name: 'camel',
+    type: CardType.Foe,
+    value: 4,
+  },
+  [0x100B]: {
+    name: 'sphinx',
+    type: CardType.Foe,
+    value: 8,
+  },
+  [0x100C]: {
+    name: 'crocodile',
+    type: CardType.Foe,
+    value: 6,
+  },
+  [0x100D]: {
+    name: 'spider',
+    type: CardType.Foe,
+    value: 2,
   },
 
   // Treasure
   [0x2001]: {
-    name: 'bettle',
+    name: 'beetle',
     type: CardType.Treasure,
-    value: 2,
+    value: 1,
   },
   [0x2002]: {
     name: 'pottery',
     type: CardType.Treasure,
-    value: 4,
+    value: 2,
   },
   [0x2003]: {
     name: 'gem',
     type: CardType.Treasure,
-    value: 6,
+    value: 3,
   },
   [0x2004]: {
     name: 'urn',
     type: CardType.Treasure,
-    value: 8,
+    value: 4,
     description: 'An urn',
   },
 
@@ -141,7 +166,7 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x3002]: {
     name: 'flask',
     type: CardType.Food,
-    value: 6,
+    value: 5,
   },
   [0x3003]: {
     name: 'jug',
@@ -156,7 +181,7 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
 
   // Weapon
   [0x4001]: {
-    name: 'flail',
+    name: 'stick',
     type: CardType.Weapon,
     value: 3,
   },
@@ -174,7 +199,7 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x4004]: {
     name: 'pickaxe',
     type: CardType.Weapon,
-    value: 3,
+    value: 4,
   },
   [0x4005]: {
     name: 'stiletto',
@@ -194,6 +219,12 @@ export function getCardsByType(type: CardType) {
 
 export const Heroes = getCardsByType(CardType.Hero);
 
+export const Foes = getCardsByType(CardType.Foe);
+
+export const Treasures = getCardsByType(CardType.Treasure);
+export const Foods = getCardsByType(CardType.Food);
+export const Weapons = getCardsByType(CardType.Weapon);
+
 export function getTooltip(card: number) {
   const cardDef = Cards[card];
   let tooltip = '';
@@ -201,8 +232,4 @@ export function getTooltip(card: number) {
     tooltip = `[${CardTypeName[cardDef.type]}] ${cardDef.description || `A ${cardDef.name}`}`;
   }
   return tooltip;
-}
-
-export function canDualWield(id: number) {
-  return id === Hero.Swordsman;
 }

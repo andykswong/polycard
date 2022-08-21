@@ -1,9 +1,15 @@
 .pile {
   position: relative;
+  margin: 0.5rem;
+}
+
+.placeholder.hasCard {
+  position: absolute;
+  top: 0;
 }
 
 .card {
-  height: 5px;
+  height: 10px;
   overflow: visible;
 }
 

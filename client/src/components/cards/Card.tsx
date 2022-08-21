@@ -16,6 +16,7 @@ export function Card({ color, icon, value, bottomValue = value, reverseBottom = 
         src={`./img/${icon}.png`} alt=""
         className={`${styles.cardIcon}`}
         style={{ filter: `var(--filter-${color})` }}
+        draggable={false}
       />
       <p className={`${styles.bottomValue} ${reverseBottom ? styles.reverse : ''}`}>{bottomValue}</p>
     </div>
