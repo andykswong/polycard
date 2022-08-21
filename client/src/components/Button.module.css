@@ -1,0 +1,21 @@
+@import '../vars.css';
+
+.btn {
+  all: unset;
+  border: 2px solid var(--color-white); 
+  margin: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.btn:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.wide {
+  min-width: 300px;
+}

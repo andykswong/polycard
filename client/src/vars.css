@@ -1,0 +1,15 @@
+:root {
+  --color-black: #282c34;
+  --color-grey: #5a5353;
+  --color-lightgrey: #c3c3c3;
+  --color-white: #dedede;
+  --color-red: #e6482e;
+  --color-green: #71aa34;
+  --color-gold: gold;
+  --color-blue: #324669;
+  --filter-black: invert(1.0) saturate(1000%);
+  --filter-grey: invert(0.6);
+  --filter-gold: invert(0.4) sepia(1) hue-rotate(20deg) saturate(1000%);
+  --filter-red: invert(0.5) sepia(0.5) hue-rotate(325deg) saturate(1000%);
+  --filter-blue: invert(0.7) sepia(0.2) hue-rotate(170deg) saturate(1000%);
+}

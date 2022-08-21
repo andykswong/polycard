@@ -1,0 +1,5 @@
+{
+    "solidity.defaultCompiler": "localNodeModule",
+    "solidity.packageDefaultDependenciesDirectory": "contracts/node_modules",
+    "editor.tabSize": 2
+}

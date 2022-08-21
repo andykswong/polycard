@@ -1,0 +1,12 @@
+.pile {
+  position: relative;
+}
+
+.card {
+  height: 5px;
+  overflow: visible;
+}
+
+.card:last-child {
+  height:100%;
+}

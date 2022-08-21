@@ -1,0 +1,19 @@
+{
+  "name": "contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PolyCards contract",
+  "main": "truffle-config.js",
+  "dependencies": {
+    "@chainlink/contracts": "^0.4.2",
+    "@openzeppelin/contracts": "^4.7.2",
+    "@truffle/hdwallet-provider": "^2.0.10"
+  },
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "test": "truffle test"
+  },
+  "author": "Andy K.S. Wong <andykswong@outlook.com>",
+  "license": "MIT"
+}

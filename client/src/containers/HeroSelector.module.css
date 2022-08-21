@@ -1,0 +1,27 @@
+.selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.heroCard {
+  opacity: 0.05;
+}
+
+.heroCard.selectable {
+  opacity: 0.5;
+}
+
+.heroCard.selectable:hover {
+  opacity: 0.8;
+}
+
+.heroCard.selected {
+  opacity: 1.0;
+}
+
+.heroCard.selected:hover {
+  opacity: 1.0;
+}
