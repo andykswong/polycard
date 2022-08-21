@@ -1,5 +1,5 @@
 import { Action, ActionType } from './actions';
-import { Cards, getTooltip, Heroes } from '../model/card';
+import { Cards, getTooltip, Hero, Heroes, HeroStartWeapon } from '../model/card';
 import { MIN_CARDS_PER_PILE, CARD_PILES } from '../model/game';
 import { slotId, SlotId, SlotType } from '../model/slot';
 
@@ -14,6 +14,7 @@ export interface GameStates {
   heroGems: number;
   heroHp: number;
   slots: Record<SlotId, CardPile>;
+  practice: boolean;
 }
 
 export interface AppStates extends GameStates {
@@ -33,6 +34,7 @@ const initialGameState: () => GameStates = () => ({
   heroGems: 0,
   heroHp: 0,
   slots: {},
+  practice: true,
 });
 
 export const INITIAL_STATE: AppStates = {
@@ -41,8 +43,6 @@ export const INITIAL_STATE: AppStates = {
   ownedTokens: {
     [0x0]: 0,
     [0x0001]: 1,
-    [0x0002]: 1,
-    [0x0003]: 1,
   },
   ...initialGameState(),
 };
@@ -66,10 +66,12 @@ export function reducer(state: AppStates, action: Action) {
         ...state,
         ...initialGameState(),
         state: GameState.Playing,
+        practice: action.practice,
         hero: action.hero,
         heroHp: Cards[action.hero].value,
       };
       newState.slots = createPiles(newState.slots, action.topCards);
+      newState.slots = addHeroStartWeapon(newState.slots, action.hero);
       return newState;
 
     case ActionType.UPDATE_HERO:
@@ -106,7 +108,6 @@ export function reducer(state: AppStates, action: Action) {
         }),
       };
     }
-
   }
 
   return state;
@@ -118,6 +119,14 @@ function createPiles(slots: Record<SlotId, CardPile>, cards: number[]): Record<S
       cards: MIN_CARDS_PER_PILE + i,
       topCard: cards[i],
     };
+  }
+  return slots;
+}
+
+function addHeroStartWeapon(slots: Record<SlotId, CardPile>, hero: Hero): Record<SlotId, CardPile> {
+  const startWeapon = HeroStartWeapon[hero];
+  if (startWeapon) {
+    slots[slotId(SlotType.Weapon, 0)] = { topCard: startWeapon };
   }
   return slots;
 }

@@ -1,0 +1,23 @@
+{
+  "name": "Archaeologist",
+  "description": "Archaeologist Hero Card for PolyCard",
+  "image": "https://andykswong.github.io/polycard/img/archaeologist.png",
+  "background_color": "000000",
+  "attributes": [
+    {
+      "display_type": "number", 
+      "trait_type": "Health", 
+      "value": 11
+    },
+    {
+      "display_type": "boost_number", 
+      "trait_type": "Extra Gem from Treasure", 
+      "value": 1
+    },
+    {
+      "display_type": "boost_number", 
+      "trait_type": "Extra Health from Food", 
+      "value": 1
+    }
+  ]
+}

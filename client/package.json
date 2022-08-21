@@ -4,6 +4,7 @@
   "private": true,
   "author": "Andy K.S. Wong <andykswong@outlook.com>",
   "license": "MIT",
+  "homepage": "https://andykswong.github.io/polycard/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
@@ -13,8 +14,6 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "react": "^18.2.0",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",

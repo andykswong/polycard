@@ -26,6 +26,10 @@
   vertical-align: sub;
 }
 
+.endImage {
+  width: 40%;
+}
+
 .spacer {
   flex-grow: 1;
 }

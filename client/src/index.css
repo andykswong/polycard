@@ -17,6 +17,10 @@ h1 {
   font-size: 3em;
 }
 
+h2 {
+  font-size: 2em;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

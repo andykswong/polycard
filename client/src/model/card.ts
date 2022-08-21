@@ -52,19 +52,19 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [Hero.Adventurer]: {
     name: 'adventurer',
     type: CardType.Hero,
-    value: 10,
+    value: 12,
     description: 'Your average adventurer',
   },
   [Hero.Archaeologist]: {
     name: 'archaeologist',
     type: CardType.Hero,
-    value: 9,
+    value: 11,
     description: 'Archaeologist. Food and treasure values +1',
   },
   [Hero.Swordsman]: {
     name: 'swordsman',
     type: CardType.Hero,
-    value: 12,
+    value: 13,
     description: 'Dual wielding swordsman',
   },
 
@@ -79,13 +79,13 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x1002]: {
     name: 'pharaoh',
     type: CardType.Foe,
-    value: 10,
+    value: 9,
     description: 'The Mighty Pharaoh',
   },
   [0x1004]: {
     name: 'mummy',
     type: CardType.Foe,
-    value: 7,
+    value: 6,
   },
   [0x1005]: {
     name: 'cobra',
@@ -101,7 +101,7 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x1007]: {
     name: 'cat',
     type: CardType.Foe,
-    value: 3,
+    value: 2,
   },
   [0x1008]: {
     name: 'beetle',
@@ -116,17 +116,17 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x100A]: {
     name: 'camel',
     type: CardType.Foe,
-    value: 4,
+    value: 3,
   },
   [0x100B]: {
     name: 'sphinx',
     type: CardType.Foe,
-    value: 8,
+    value: 7,
   },
   [0x100C]: {
     name: 'crocodile',
     type: CardType.Foe,
-    value: 6,
+    value: 5,
   },
   [0x100D]: {
     name: 'spider',
@@ -188,7 +188,7 @@ export const Cards: Readonly<Record<number, CardDefinition>> = {
   [0x4002]: {
     name: 'gear',
     type: CardType.Weapon,
-    value: 8,
+    value: 7,
     description: 'Full armor set',
   },
   [0x4003]: {
@@ -218,6 +218,12 @@ export function getCardsByType(type: CardType) {
 }
 
 export const Heroes = getCardsByType(CardType.Hero);
+
+export const HeroStartWeapon: Record<Hero, number> = {
+  [Hero.Adventurer]: 0x4001,
+  [Hero.Archaeologist]: 0x4004,
+  [Hero.Swordsman]: 0x4006
+}
 
 export const Foes = getCardsByType(CardType.Foe);
 

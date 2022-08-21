@@ -1,15 +1,27 @@
+import { NavigateFunction } from 'react-router-dom';
 import { Action, placeCardAction, flipCardAction, startGameAction, updateCardAction, updateHeroAction } from './actions';
 import { CARD_PILES, canTrash, canFitSlot } from './../model/game';
 import { Cards, CardType, Foes, Foods, Hero, Treasures, Weapons } from '../model/card';
-import { SlotType, slotTypeOf } from '../model/slot';
-import { GameStates } from './reducer';
+import { slotId, SlotType, slotTypeOf } from '../model/slot';
+import { CardPile, GameStates } from './reducer';
 
 export async function startGame(
   dispatch: (action: Action) => void,
+  navigate: NavigateFunction,
   hero: number,
+  practice: boolean = true,
 ) {
   const cards: number[] = generateCards();
-  dispatch(startGameAction(hero, cards));
+  dispatch(startGameAction(hero, cards, practice));
+  navigate('/play');
+}
+
+export async function endGame(
+  dispatch: (action: Action) => void,
+  navigate: NavigateFunction,
+  win: boolean
+) {
+  navigate('/end');
 }
 
 export async function playCard(
@@ -96,6 +108,16 @@ export async function playCard(
   }
 }
 
+export function countCards(slots: Record<number, CardPile>) {
+  let cards = 0;
+  for (let i = 0; i < CARD_PILES; ++i) {
+    const slot = slots[slotId(SlotType.Pile, i)];
+    cards += slot?.cards || 0;
+    cards += (slot?.topCard ? 1 : 0);
+  }
+  return cards
+}
+
 function generateCards() {
   const cards: number[] = [];
   for (let i = 0; i < CARD_PILES; ++i) {
@@ -105,7 +127,7 @@ function generateCards() {
 }
 
 function generateCard() {
-  switch (random(5)) {
+  switch (random(6)) {
     case 0:
       return Treasures[random(Treasures.length)];
     case 1:

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Card } from './containers/Card';
 import { Hero } from './containers/Hero';
@@ -9,12 +10,25 @@ import { useAppState, useDispatch } from './state/State';
 
 import styles from './App.module.css';
 import { canDualWield, CARD_PILES } from './model/game';
+import { countCards, endGame } from './state/interact';
 
 export function Game() {
   const { 
     hero, heroGems, heroHp, slots,
   } = useAppState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (heroHp <= 0) {
+      endGame(dispatch, navigate, false);
+      return;
+    }
+    if (!countCards(slots)) {
+      endGame(dispatch, navigate, true);
+      return;
+    }
+  }, [heroHp, slots]);
 
   return (
     <React.Fragment>

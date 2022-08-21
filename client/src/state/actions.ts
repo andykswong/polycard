@@ -20,11 +20,12 @@ export function lookupAction(id: number): Action {
   };
 }
 
-export function startGameAction(hero: number, topCards: number[]): Action {
+export function startGameAction(hero: number, topCards: number[], practice: boolean): Action {
   return {
     type: ActionType.START_GAME,
     hero,
     topCards,
+    practice,
   };
 }
 

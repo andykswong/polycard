@@ -1,6 +1,8 @@
 import { Hero, Cards, CardType } from './card';
 import { SlotType, slotTypeOf } from './slot';
 
+export const GEM_PER_GAME = 10;
+
 export const CARD_PILES = 4;
 
 export const MIN_CARDS_PER_PILE = 6;
