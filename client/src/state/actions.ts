@@ -21,6 +21,7 @@ export interface Action {
 export function walletInitAction(
   web3: Web3, walletAddress: string, networkId: number,
   tokenContract: Contract,
+  gameContract: Contract,
   ownedTokens: Record<number, number>,
 ): Action {
   return {
@@ -29,6 +30,7 @@ export function walletInitAction(
     walletAddress,
     networkId,
     tokenContract,
+    gameContract,
     ownedTokens,
   };
 }

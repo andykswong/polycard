@@ -1,9 +1,11 @@
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import { Action, walletInitAction, walletRefreshAction } from './actions';
-import tokenContractMetadata from '../contracts/PolyCardTokens.json';
 import { GEM_TOKEN_ID } from '../model/game';
 import { Hero } from '../model/card';
+
+import tokenContractMetadata from '../contracts/PolyCardTokens.json';
+import gameContractMetadata from '../contracts/PolyCardGame.json';
 
 export const GEM_PRICE_MATIC = 0.0005;
 
@@ -25,8 +27,10 @@ export async function connectWallet(
   const address = accounts[0];
 
   let tokenContract: Contract;
+  let gameContract: Contract;
   try {
     tokenContract = loadContract(web3, networkID, tokenContractMetadata);
+    gameContract = loadContract(web3, networkID, gameContractMetadata);
   } catch (err) {
     console.error(err);
     return;
@@ -34,7 +38,7 @@ export async function connectWallet(
 
   const ownedTokens = await getBalance(tokenContract, address);
 
-  dispatch(walletInitAction(web3, address, networkID, tokenContract, ownedTokens));
+  dispatch(walletInitAction(web3, address, networkID, tokenContract, gameContract, ownedTokens));
 }
 
 export async function refreshWallet(

@@ -60,7 +60,7 @@ function ShopToken() {
       <div
         className={`${styles.shopItem}`}
       >
-        <Card id={0x2003} value={100} />
+        <Card id={0x20301} value={100} />
       </div>
       <Button disabled={!buyable}
         onClick={async () => {

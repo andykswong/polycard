@@ -29,6 +29,7 @@ export interface AppStates extends GameStates {
   networkId: number;
   walletAddress: string;
   tokenContract?: Contract;
+  gameContract?: Contract;
 }
 
 export interface CardPile {
@@ -68,6 +69,7 @@ export function reducer(state: AppStates, action: Action) {
         networkId: action.networkId,
         walletAddress: action.walletAddress,
         tokenContract: action.tokenContract,
+        gameContract: action.gameContract,
         ownedTokens: {
           ...defaultOwnedTokens(),
           ...action.ownedTokens,

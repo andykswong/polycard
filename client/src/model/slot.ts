@@ -14,7 +14,6 @@ export enum SlotId {
   Pile1 = slotId(SlotType.Pile, 1),
   Pile2 = slotId(SlotType.Pile, 2),
   Pile3 = slotId(SlotType.Pile, 3),
-  Pile4 = slotId(SlotType.Pile, 4),
   Hero = slotId(SlotType.Hero),
   Weapon = slotId(SlotType.Weapon, 0),
   Weapon1 = slotId(SlotType.Weapon, 1),
