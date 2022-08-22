@@ -17,8 +17,13 @@ export async function startGame(
   practice: boolean = true,
 ) {
   if (!practice) {
-    await startGameOnChain(gameContract, walletAddress, hero);
-    await updateGameFromChain(dispatch, gameContract, walletAddress);
+    const state = await getGameState(gameContract, walletAddress);
+    if (state.hero) {
+      dispatch(updateGameStateAction(state));
+    } else {
+      await startGameOnChain(gameContract, walletAddress, hero);
+      await updateGameFromChain(dispatch, gameContract, walletAddress);
+    }
   } else {
     dispatch(startPracticeGameAction(hero, generateCards()));
   }

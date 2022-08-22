@@ -34,6 +34,9 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
         gemPrice = 5 * uint256(10) ** 14;
         tokenGemPrices[ARCHAEOLOGIST] = 200;
         tokenGemPrices[SWORDSMAN] = 200;
+
+        // TODO: testing only, to be removed
+        _mint(0x6E12A2f11De0b963ed63a1C70b2fFD4B88dF5365, GEM, 1000, '');
     }
 
     function buyGems(uint256 gems) public payable {

@@ -15,5 +15,8 @@
     "test": "truffle test"
   },
   "author": "Andy K.S. Wong <andykswong@outlook.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^16.0.1"
+  }
 }

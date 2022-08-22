@@ -18,11 +18,11 @@
  *
  */
 
-// require('dotenv').config();
+require('dotenv').config();
 // const mnemonic = process.env["MNEMONIC"];
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -51,13 +51,15 @@ module.exports = {
     //
 
     matic: {
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://rpc-mumbai.matic.today'),
+      //provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://rpc-mumbai.matic.today'),
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://rpc-mumbai.maticvigil.com/v1/${process.env.PROJECT_ID}`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true,
-      gas: 6000000,
-      gasPrice: 10000000000,
+      gas: 5500000,
+      gasPrice: 3000000000,
+      from: process.env.MUMBAI_ACCOUNT,
     },
 
     // An additional network, but with some advanced options…

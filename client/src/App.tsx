@@ -80,14 +80,14 @@ const Menu = () => {
           await startGame(dispatch, navigate, walletAddress, tokenContract!, gameContract!, hero, false);
         }}
       >
-        Play On Chain (Cost: ♦{GEM_PER_GAME})
+        Play / Continue On Chain (Cost: ♦{GEM_PER_GAME})
       </Button>
       <Button wide disabled={!walletAddress}
         onClick={() => {
           navigate('/shop');
         }}
       >
-        Shop
+        Shop Gems and Cards
       </Button>
       <WalletButton />
     </React.Fragment>
