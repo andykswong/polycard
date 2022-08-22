@@ -1,4 +1,4 @@
-import * as _Cards from './cards';
+import _Cards from './cardsEsm';
 
 export const Cards = _Cards as Readonly<Record<number, CardDefinition>>;
 
