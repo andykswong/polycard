@@ -96,8 +96,16 @@ export function reducer(state: AppStates, action: Action) {
         ...state,
         hero: action.id,
       };
+    
+    case ActionType.UPDATE_GAME_STATE:
+      return {
+        ...state,
+        state: GameState.Playing,
+        practice: false,
+        ...action.state,
+      };
 
-    case ActionType.START_GAME:
+    case ActionType.START_PRACTICE_GAME:
       const newState = {
         ...state,
         ...initialGameState(),

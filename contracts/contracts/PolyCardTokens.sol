@@ -14,6 +14,8 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
     uint256 public gemPrice;
     mapping(uint256 => uint256) public tokenGemPrices;
 
+    mapping(address => bool) public admins;
+
     event Sold(address buyer, uint256 tokenId, uint256 amount);
 
     constructor()
@@ -66,6 +68,12 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
         _increaseSupplyBatch(ids, amounts);
     }
 
+    function setAdmin(
+        address account, bool approved
+    ) public onlyOwner {
+        admins[account] = approved;
+    }
+
     function setGemPrice(
         uint256 price
     ) public onlyOwner {
@@ -82,6 +90,10 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
             uint256 price = prices[i];
             tokenGemPrices[id] = price;
         }
+    }
+
+    function isApprovedForAll(address account, address operator) public view virtual override returns (bool) {
+        return admins[operator] || super.isApprovedForAll(account, operator);
     }
 
     function totalSupply(uint256 id)

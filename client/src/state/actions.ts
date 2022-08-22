@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
+import { GameStates } from './reducer';
 
 export const ActionType = {
   WALLET_INIT: 'WALLET_INIT',
@@ -7,10 +8,12 @@ export const ActionType = {
   LOOKUP: 'LOOKUP',
   SELECT_HERO: 'SELECT_HERO',
   UPDATE_HERO: 'UPDATE_HERO',
-  START_GAME: 'START_GAME',
+  START_PRACTICE_GAME: 'START_PRACTICE_GAME',
   PLACE_CARD: 'PLACE_CARD',
   FLIP_CARD: 'FLIP_CARD',
   UPDATE_CARD: 'UPDATE_CARD',
+
+  UPDATE_GAME_STATE: 'UPDATE_GAME_STATE',
 };
 
 export interface Action {
@@ -44,6 +47,13 @@ export function walletRefreshAction(
   };
 }
 
+export function updateGameStateAction(state: GameStates): Action {
+  return {
+    type: ActionType.UPDATE_GAME_STATE,
+    state,
+  };
+}
+
 export function lookupAction(id: number): Action {
   return {
     type: ActionType.LOOKUP,
@@ -51,12 +61,12 @@ export function lookupAction(id: number): Action {
   };
 }
 
-export function startGameAction(hero: number, topCards: number[], practice: boolean): Action {
+export function startPracticeGameAction(hero: number, topCards: number[]): Action {
   return {
-    type: ActionType.START_GAME,
+    type: ActionType.START_PRACTICE_GAME,
     hero,
     topCards,
-    practice,
+    practice: true,
   };
 }
 

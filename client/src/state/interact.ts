@@ -1,20 +1,39 @@
 import { NavigateFunction } from 'react-router-dom';
-import { Action, placeCardAction, flipCardAction, startGameAction, updateCardAction, updateHeroAction } from './actions';
+import { Contract } from 'web3-eth-contract';
+import { Action, placeCardAction, flipCardAction, startPracticeGameAction, updateCardAction, updateHeroAction, updateGameStateAction } from './actions';
 import { CARD_PILES, canTrash, canFitSlot } from './../model/game';
 import { Cards, CardType, Foes, Foods, Hero, Treasures, Weapons } from '../model/card';
 import { slotId, SlotType, slotTypeOf } from '../model/slot';
-import { CardPile, GameStates } from './reducer';
+import { AppStates, CardPile, GameStates } from './reducer';
+import { getGameState, moveGameOnChain, startGameOnChain } from './web3';
 
 export async function startGame(
   dispatch: (action: Action) => void,
   navigate: NavigateFunction,
+  walletAddress: string,
+  tokenContract: Contract,
+  gameContract: Contract,
   hero: number,
   practice: boolean = true,
 ) {
-  const cards: number[] = generateCards();
-  dispatch(startGameAction(hero, cards, practice));
+  if (!practice) {
+    await startGameOnChain(gameContract, walletAddress, hero);
+    await updateGameFromChain(dispatch, gameContract, walletAddress);
+  } else {
+    dispatch(startPracticeGameAction(hero, generateCards()));
+  }
   navigate('/play');
 }
+
+export async function updateGameFromChain(
+  dispatch: (action: Action) => void,
+  gameContract: Contract,
+  walletAddress: string,
+) {
+  const state = await getGameState(gameContract, walletAddress);
+  dispatch(updateGameStateAction(state));
+}
+
 
 export async function endGame(
   dispatch: (action: Action) => void,
@@ -25,11 +44,13 @@ export async function endGame(
 }
 
 export async function playCard(
-  state: GameStates,
+  state: AppStates,
   dispatch: (action: Action) => void,
   srcSlot: number,
   dstSlot: number
 ) {
+  const playLocal = state.practice;
+
   const srcSlotType = slotTypeOf(srcSlot);
   const srcCard = state.slots[srcSlot].topCard;
   const srcCardType = Cards[srcCard].type;
@@ -45,49 +66,73 @@ export async function playCard(
     dispatch(flipCardAction(slot, nextCard));
   }
 
+  async function moveOnChain() {
+    await moveGameOnChain(state.gameContract!, state.walletAddress, srcSlot, dstSlot);
+  }
+
   switch (dstSlotType) {
     case SlotType.Trash:
       if (canTrash(srcCard)) {
-        const nextCard = generateCard();
-        dispatch(flipCardAction(srcSlot, nextCard));
+        if (playLocal) {
+          const nextCard = generateCard();
+          dispatch(flipCardAction(srcSlot, nextCard));
+        } else {
+          moveOnChain();
+        }
         return;
       }
       break;
     case SlotType.Weapon:
     case SlotType.Item:
       if (canFitSlot(srcCard, dstSlot) && !dstCard) {
-        flipCard();
-        dispatch(placeCardAction(dstSlot, srcCard));
+        if (playLocal) {
+          flipCard();
+          dispatch(placeCardAction(dstSlot, srcCard));
+        } else {
+          moveOnChain();
+        }
         return;
       }
       break;
     case SlotType.Hero:
       switch (srcCardType) {
         case CardType.Foe: {
-          flipCard();
-          dispatch(updateHeroAction(
-            Math.max(0, state.heroHp - srcCardValue),
-            state.heroGems
-          ));
+          if (playLocal) {
+            flipCard();
+            dispatch(updateHeroAction(
+              Math.max(0, state.heroHp - srcCardValue),
+              state.heroGems
+            ));
+          } else {
+            moveOnChain();
+          }
           return;
         }
         case CardType.Food: {
-          flipCard();
-          dispatch(updateHeroAction(
-            Math.min(
-              Cards[state.hero].value,
-              state.heroHp + srcCardValue + itemValueAdj
-            ),
-            state.heroGems
-          ));
+          if (playLocal) {
+            flipCard();
+            dispatch(updateHeroAction(
+              Math.min(
+                Cards[state.hero].value,
+                state.heroHp + srcCardValue + itemValueAdj
+              ),
+              state.heroGems
+            ));
+          } else {
+            moveOnChain();
+          }
           return;
         }
         case CardType.Treasure: {
-          flipCard();
-          dispatch(updateHeroAction(
-            state.heroHp,
-            state.heroGems + srcCardValue +  + itemValueAdj
-          ));
+          if (playLocal) {
+            flipCard();
+            dispatch(updateHeroAction(
+              state.heroHp,
+              state.heroGems + srcCardValue +  + itemValueAdj
+            ));
+          } else {
+            moveOnChain();
+          }
           return;
         }
       }
@@ -95,14 +140,18 @@ export async function playCard(
 
     case SlotType.Pile:
       if (srcSlotType === SlotType.Weapon && dstCard && dstCardType === CardType.Foe) {
-        const newDstValue = Math.max(0, dstCardValue - srcCardValue);
-        if (newDstValue) {
-          dispatch(updateCardAction(dstSlot, newDstValue));
+        if (playLocal) {
+          const newDstValue = Math.max(0, dstCardValue - srcCardValue);
+          if (newDstValue) {
+            dispatch(updateCardAction(dstSlot, newDstValue));
+          } else {
+            flipCard(dstSlot);
+          }
+          flipCard();
+          return;
         } else {
-          flipCard(dstSlot);
+          moveOnChain();
         }
-        flipCard();
-        return;
       }
       break;
   }

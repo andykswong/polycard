@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import { AppStateProvider, useAppState, useDispatch } from './state/State';
 import { startGame } from './state/interact';
-import { GEM_PER_GAME } from './model/game';
+import { GEM_PER_GAME, GEM_TOKEN_ID } from './model/game';
 import { Button } from './components/Button';
 import { HeroSelector } from './containers/HeroSelector';
 import { WalletButton } from './containers/WalletButton';
@@ -57,11 +57,11 @@ export const Heading = () => (
 const Space = () => <div className={styles.spacer} />;
 
 const Menu = () => {
-  const { hero, walletAddress } = useAppState();
+  const { hero, walletAddress, tokenContract, gameContract, ownedTokens } = useAppState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const canPlayOnChain = !!walletAddress;
+  const gems = ownedTokens[GEM_TOKEN_ID] || 0;
+  const canPlayOnChain = !!walletAddress && gems >= GEM_PER_GAME;
 
   return (
     <React.Fragment>
@@ -71,18 +71,18 @@ const Menu = () => {
       <HeroSelector />
       <Tooltip />
       <Button wide onClick={async () => {
-        await startGame(dispatch, navigate, hero);
+        await startGame(dispatch, navigate, walletAddress, tokenContract!, gameContract!, hero);
       }}>
         Play Offline
       </Button>
       <Button wide disabled={!canPlayOnChain}
         onClick={async () => {
-          await startGame(dispatch, navigate, hero, false);
+          await startGame(dispatch, navigate, walletAddress, tokenContract!, gameContract!, hero, false);
         }}
       >
         Play On Chain (Cost: ♦{GEM_PER_GAME})
       </Button>
-      <Button wide disabled={!canPlayOnChain}
+      <Button wide disabled={!walletAddress}
         onClick={() => {
           navigate('/shop');
         }}
@@ -96,9 +96,9 @@ const Menu = () => {
 
 const EndGame = () => {
   const navigate = useNavigate();
-  const { heroHp, heroGems } = useAppState();
+  const { heroHp, heroGems, practice } = useAppState();
   const win = heroHp > 0;
-  const earnedGems = win ? heroGems : Math.floor(heroGems / 2);
+  const earnedGems = win || !practice ? heroGems : Math.floor(heroGems / 2);
 
   return (
     <React.Fragment>

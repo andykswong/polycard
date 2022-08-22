@@ -10,11 +10,11 @@ export type HeroProps = {
 
 export function Hero({ id, hp, gem }: HeroProps) {
   const card = Cards[id];
-  const hpValue = (hp === undefined ? card.value : hp) | 0;
+  const hpValue = (hp === undefined ? card?.value : hp) | 0;
 
   return (
     <CardText card={id}>
-      <HeroCard icon={card.name} hp={hpValue} gem={gem} />
+      <HeroCard icon={card?.name} hp={hpValue} gem={gem} />
     </CardText>
   )
 }

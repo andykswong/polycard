@@ -25,7 +25,7 @@ export function Shop() {
           await refreshWallet(tokenContract!, walletAddress, dispatch);
         }
       },
-      5000
+      2000
     );
     return () => clearInterval(id);
   }, []);

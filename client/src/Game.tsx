@@ -10,14 +10,27 @@ import { useAppState, useDispatch } from './state/State';
 
 import styles from './App.module.css';
 import { canDualWield, CARD_PILES } from './model/game';
-import { countCards, endGame } from './state/interact';
+import { countCards, endGame, updateGameFromChain } from './state/interact';
 
 export function Game() {
   const { 
     hero, heroGems, heroHp, slots,
+    practice, gameContract, walletAddress
   } = useAppState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const id = setInterval(
+      async () => {
+        if (!practice) {
+          await updateGameFromChain(dispatch, gameContract!, walletAddress);
+        }
+      },
+      2000
+    );
+    return () => clearInterval(id);
+  }, []);
 
   React.useEffect(() => {
     if (heroHp <= 0) {
