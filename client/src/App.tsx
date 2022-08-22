@@ -7,14 +7,16 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { AppStateProvider, useAppState, useDispatch } from './state/State';
-import { Button } from './components/Button';
-import { HeroSelector } from './containers/HeroSelector';
-import { Tooltip } from './containers/Tooltip';
-import { Game } from './Game';
-
-import styles from './App.module.css';
 import { startGame } from './state/interact';
 import { GEM_PER_GAME } from './model/game';
+import { Button } from './components/Button';
+import { HeroSelector } from './containers/HeroSelector';
+import { WalletButton } from './containers/WalletButton';
+import { Tooltip } from './containers/Tooltip';
+import { Game } from './Game';
+import { Shop } from './Shop';
+
+import styles from './App.module.css';
 
 export function App() {
   return (
@@ -23,8 +25,9 @@ export function App() {
         <Space />
         <Router>
           <Routes>
-            <Route path="/" element={<WithTitle />}>
+            <Route path="/" element={<WithHeading />}>
               <Route index element={<Menu />}></Route>
+              <Route path="/shop" element={<Shop />}></Route>
               <Route path="/play" element={<Game />}></Route>
               <Route path="/end" element={<EndGame />}></Route>
             </Route>
@@ -36,25 +39,29 @@ export function App() {
   );
 }
 
-export function WithTitle() {
+export function WithHeading() {
   return (
     <React.Fragment>
-      <Title />
+      <Heading />
       <Outlet />
     </React.Fragment>
   );
 }
 
-export const Title = () => (
-  <h1 className={styles.title}>POLY <img src='img/pyramid.png' alt='' className={styles.icon}></img> CARD</h1>
+export const Heading = () => (
+  <div className={styles.row}>
+    <h1 className={styles.title}>POLY <img src={`${process.env.PUBLIC_URL}/img/pyramid.png`} alt='' className={styles.icon}></img> CARD</h1>
+  </div>
 );
 
 const Space = () => <div className={styles.spacer} />;
 
 const Menu = () => {
-  const { hero } = useAppState();
+  const { hero, walletAddress } = useAppState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const canPlayOnChain = !!walletAddress;
 
   return (
     <React.Fragment>
@@ -63,19 +70,26 @@ const Menu = () => {
       </div>
       <HeroSelector />
       <Tooltip />
-      <Button wide disabled
-        onClick={async () => {
-          await startGame(dispatch, navigate, hero, false);
-        }}
-      >
-        Play On Chain (Cost: ♦${GEM_PER_GAME})
-      </Button>
       <Button wide onClick={async () => {
         await startGame(dispatch, navigate, hero);
       }}>
         Play Offline
       </Button>
-      <Button wide>Shop</Button>
+      <Button wide disabled={!canPlayOnChain}
+        onClick={async () => {
+          await startGame(dispatch, navigate, hero, false);
+        }}
+      >
+        Play On Chain (Cost: ♦{GEM_PER_GAME})
+      </Button>
+      <Button wide disabled={!canPlayOnChain}
+        onClick={() => {
+          navigate('/shop');
+        }}
+      >
+        Shop
+      </Button>
+      <WalletButton />
     </React.Fragment>
   );
 };
@@ -89,7 +103,7 @@ const EndGame = () => {
   return (
     <React.Fragment>
       <div className={styles.row}>
-        <img draggable={false} src={`./img/${win ? 'laurels' : 'grave'}.png`} alt="" className={styles.endImage} />
+        <img draggable={false} src={`${process.env.PUBLIC_URL}/img/${win ? 'laurels' : 'grave'}.png`} alt="" className={styles.endImage} />
       </div>
       <h2>{win ? `You Win!` : `You are Dead!`}</h2>
       <br />

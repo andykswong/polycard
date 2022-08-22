@@ -49,3 +49,11 @@
 .piles {
   min-height: 260px;
 }
+
+.shopItem {
+  margin: 0.5rem 1rem;
+}
+
+.shopItem.brought {
+  opacity: 0.5;
+}

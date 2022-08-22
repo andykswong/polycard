@@ -21,8 +21,8 @@ export const CardSuit: Readonly<Record<CardType, string | null>> = {
   [CardType.Treasure]: '♦',
   [CardType.Food]: '♥',
   [CardType.Weapon]: '♠',
-  [CardType.Hero]: null,
-  [CardType.Special]: null,
+  [CardType.Hero]: '',
+  [CardType.Special]: '',
 };
 
 export const CardColor: Readonly<Record<CardType, string | null>> = {

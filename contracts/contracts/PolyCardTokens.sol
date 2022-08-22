@@ -8,9 +8,13 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
 contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
     uint256 public constant GEM = 0;
-    // uint256 public constant ADVENTURER = 0x0001;
     uint256 public constant ARCHAEOLOGIST = 0x0002;
     uint256 public constant SWORDSMAN = 0x0003;
+
+    uint256 public gemPrice;
+    mapping(uint256 => uint256) public tokenGemPrices;
+
+    event Sold(address buyer, uint256 tokenId, uint256 amount);
 
     constructor()
         ERC1155("https://andykswong.github.io/polycard/token/{id}.json")
@@ -23,8 +27,36 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
         amounts[1] = 10**3;
         ids[2] = SWORDSMAN;
         amounts[2] = 10**3;
-
         _increaseSupplyBatch(ids, amounts);
+
+        gemPrice = 5 * uint256(10) ** 14;
+        tokenGemPrices[ARCHAEOLOGIST] = 200;
+        tokenGemPrices[SWORDSMAN] = 200;
+    }
+
+    function buyGems(uint256 gems) public payable {
+        require(msg.value == gems * gemPrice);
+        require(balanceOf(address(this), GEM) >= gems);
+
+        _safeTransferFrom(address(this), msg.sender, GEM, gems, '');
+
+        emit Sold(msg.sender, GEM, gems);
+    }
+
+    function buyToken(uint256 id) public {
+        uint256 tokenPrice = tokenGemPrices[id];
+        require(tokenPrice >= 0);
+        require(balanceOf(address(msg.sender), GEM) >= tokenPrice);
+        require(balanceOf(address(this), id) > 0);
+
+        _safeTransferFrom(msg.sender, address(this), GEM, tokenPrice, '');
+        _safeTransferFrom(address(this), msg.sender, id, 1, '');
+
+        emit Sold(msg.sender, id, 1);
+    }
+
+    function withdraw() external onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     function increaseSupplyBatch(
@@ -32,6 +64,24 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
         uint256[] calldata amounts
     ) external onlyOwner {
         _increaseSupplyBatch(ids, amounts);
+    }
+
+    function setGemPrice(
+        uint256 price
+    ) public onlyOwner {
+        gemPrice = price;
+    }
+
+    function setTokenGemPriceBatch(
+        uint256[] calldata ids,
+        uint256[] calldata prices
+    ) external onlyOwner {
+        require(ids.length == prices.length, "ids and prices length mismatch");
+        for (uint256 i = 0; i < ids.length; ++i) {
+            uint256 id = ids[i];
+            uint256 price = prices[i];
+            tokenGemPrices[id] = price;
+        }
     }
 
     function totalSupply(uint256 id)
@@ -58,12 +108,12 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
     }
 
     function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external override returns (bytes4) {
+        address /* operator */,
+        address /* from */,
+        uint256 /* id */,
+        uint256 /* value */,
+        bytes calldata /* data */
+    ) external pure override returns (bytes4) {
         return
             bytes4(
                 keccak256(
@@ -73,12 +123,12 @@ contract PolyCardTokens is ERC1155Supply, ERC1155Receiver, Ownable {
     }
 
     function onERC1155BatchReceived(
-        address operator,
-        address from,
-        uint256[] calldata ids,
-        uint256[] calldata values,
-        bytes calldata data
-    ) external override returns (bytes4) {
+        address /* operator */,
+        address /* from */,
+        uint256[] calldata /* ids */,
+        uint256[] calldata /* values */,
+        bytes calldata /* data */
+    ) external pure override returns (bytes4) {
         return
             bytes4(
                 keccak256(

@@ -13,7 +13,7 @@ export function Card({ color, icon, value, bottomValue = value, reverseBottom = 
     <div className={styles.card} style={{ color: `var(--color-${color})` }}>
       <p className={styles.topValue}>{value}</p>
       <img
-        src={`./img/${icon}.png`} alt=""
+        src={`${process.env.PUBLIC_URL}/img/${icon}.png`} alt=""
         className={`${styles.cardIcon}`}
         style={{ filter: `var(--filter-${color})` }}
         draggable={false}

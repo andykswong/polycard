@@ -8,3 +8,6 @@
 
 # production
 /build
+
+# contract artifacts
+/src/contracts

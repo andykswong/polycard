@@ -7,7 +7,7 @@ export type CardSlotProps = {
 export function CardSlot({ icon }: CardSlotProps) {
   return (
     <div className={styles.slot}>
-      {icon && <img draggable={false} src={`./img/${icon}.png`} alt="" className={styles.slotIcon} />}
+      {icon && <img draggable={false} src={`${process.env.PUBLIC_URL}/img/${icon}.png`} alt="" className={styles.slotIcon} />}
     </div>
   );
 }

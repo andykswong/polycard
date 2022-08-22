@@ -1,5 +1,5 @@
-const PolyCards = artifacts.require("PolyCards");
+const PolyCardTokens = artifacts.require("PolyCardTokens");
 
 module.exports = function(deployer) {
-  deployer.deploy(PolyCards);
+  deployer.deploy(PolyCardTokens);
 };

@@ -1,3 +1,6 @@
+import Web3 from 'web3';
+import { Contract } from 'web3-eth-contract';
+
 import { Action, ActionType } from './actions';
 import { Cards, getTooltip, Hero, Heroes, HeroStartWeapon } from '../model/card';
 import { MIN_CARDS_PER_PILE, CARD_PILES } from '../model/game';
@@ -21,6 +24,11 @@ export interface AppStates extends GameStates {
   state: GameState;
   tooltip: string;
   ownedTokens: Record<number, number>;
+
+  web3?: Web3;
+  networkId: number;
+  walletAddress: string;
+  tokenContract?: Contract;
 }
 
 export interface CardPile {
@@ -37,18 +45,44 @@ const initialGameState: () => GameStates = () => ({
   practice: true,
 });
 
+const defaultOwnedTokens = () => ({
+  [0x0]: 0,
+  [0x0001]: 1,
+});
+
 export const INITIAL_STATE: AppStates = {
   state: GameState.Lobby,
   tooltip: '',
-  ownedTokens: {
-    [0x0]: 0,
-    [0x0001]: 1,
-  },
+  ownedTokens: defaultOwnedTokens(),
+  networkId: 0,
+  walletAddress: '',
   ...initialGameState(),
 };
 
 export function reducer(state: AppStates, action: Action) {
   switch (action.type) {
+    case ActionType.WALLET_INIT:
+      return {
+        ...state,
+        web3: action.web3,
+        networkId: action.networkId,
+        walletAddress: action.walletAddress,
+        tokenContract: action.tokenContract,
+        ownedTokens: {
+          ...defaultOwnedTokens(),
+          ...action.ownedTokens,
+        }
+      };
+
+    case ActionType.WALLET_REFRESH:
+      return {
+        ...state,
+        ownedTokens: {
+          ...defaultOwnedTokens(),
+          ...action.ownedTokens,
+        }
+      };
+
     case ActionType.LOOKUP:
       return {
         ...state,
@@ -69,6 +103,7 @@ export function reducer(state: AppStates, action: Action) {
         practice: action.practice,
         hero: action.hero,
         heroHp: Cards[action.hero].value,
+        tooltip: '',
       };
       newState.slots = createPiles(newState.slots, action.topCards);
       newState.slots = addHeroStartWeapon(newState.slots, action.hero);

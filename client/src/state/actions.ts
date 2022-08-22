@@ -1,4 +1,9 @@
+import Web3 from 'web3';
+import { Contract } from 'web3-eth-contract';
+
 export const ActionType = {
+  WALLET_INIT: 'WALLET_INIT',
+  WALLET_REFRESH: 'WALLET_REFRESH',
   LOOKUP: 'LOOKUP',
   SELECT_HERO: 'SELECT_HERO',
   UPDATE_HERO: 'UPDATE_HERO',
@@ -11,6 +16,30 @@ export const ActionType = {
 export interface Action {
   type: string,
   [key: string]: any,
+}
+
+export function walletInitAction(
+  web3: Web3, walletAddress: string, networkId: number,
+  tokenContract: Contract,
+  ownedTokens: Record<number, number>,
+): Action {
+  return {
+    type: ActionType.WALLET_INIT,
+    web3,
+    walletAddress,
+    networkId,
+    tokenContract,
+    ownedTokens,
+  };
+}
+
+export function walletRefreshAction(
+  ownedTokens: Record<number, number>,
+): Action {
+  return {
+    type: ActionType.WALLET_REFRESH,
+    ownedTokens,
+  };
 }
 
 export function lookupAction(id: number): Action {
