@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/polycard/static/css/main.e4a0e87e.css",
+    "main.js": "/polycard/static/js/main.e39accb4.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/polycard/static/js/787.c4e7f8f9.chunk.js",
+    "index.html": "/polycard/index.html",
+    "main.e4a0e87e.css.map": "/polycard/static/css/main.e4a0e87e.css.map",
+    "main.e39accb4.js.map": "/polycard/static/js/main.e39accb4.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/polycard/static/js/787.c4e7f8f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e4a0e87e.css",
+    "static/js/main.e39accb4.js"
+  ]
+}

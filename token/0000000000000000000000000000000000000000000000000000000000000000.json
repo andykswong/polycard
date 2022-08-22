@@ -1,0 +1,8 @@
+{
+  "name": "Gem",
+  "description": "Game Token for PolyCard",
+  "image": "https://andykswong.github.io/polycard/img/gem.png",
+  "background_color": "000000",
+  "attributes": [
+  ]
+}
