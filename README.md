@@ -31,3 +31,7 @@ End-to-end dapp development process. Also learnt a lot about the ERC-1155/721/20
 - Experiment with using state channel to allow the game to run off-chain but still being able to post back verifiable game results onchain.
 - More collectible cards
 - Improve the UX
+
+## Credit
+Game icons from https://game-icons.net
+
